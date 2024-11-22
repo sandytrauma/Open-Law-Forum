@@ -1,12 +1,13 @@
 [build]
-  command = "next build"
-  publish = "out"
-  
+  command = "next build && next export"
+  publish = "out" # The output directory created by next export
+
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+  package = "@netlify/plugin-nextjs" # Required for Next.js support on Netlify
 
 [[redirects]]
   from = "/api/*"
   to = "/api/*"
   status = 200
   force = true
+
