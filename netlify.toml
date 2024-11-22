@@ -12,6 +12,5 @@
   force = true
 
 [functions]
-  edge_handlers = "true"
-
+  directory = ".netlify/functions"
   
