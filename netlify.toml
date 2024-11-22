@@ -7,7 +7,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "/api/*"
+  to = "/api/:splat"
   status = 200
   force = true
 
