@@ -1,0 +1,12 @@
+[build]
+  command = "next build"
+  publish = "out"
+  
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/api/*"
+  status = 200
+  force = true
