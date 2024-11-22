@@ -7,19 +7,19 @@
 
 [[redirects]]
   from = "/api/files"
-  to = "/.netlify/functions/api/files"
+  to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/api/posts"
-  to = "/.netlify/functions/api/posts"
+  to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/api/comments"
-  to = "/.netlify/functions/api/comments"
+  to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
