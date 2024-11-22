@@ -3,10 +3,9 @@ import { forumSchema } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-// Handler for GET requests
+// GET handler
 export async function GET() {
   try {
-    // Fetch all posts from the database
     const posts = await db.select().from(forumSchema).execute();
     return NextResponse.json(posts);
   } catch (error) {
@@ -15,7 +14,7 @@ export async function GET() {
   }
 }
 
-// Handler for POST requests
+// POST handler
 export async function POST(req: Request) {
   try {
     const { post_title, content, post_author } = await req.json();
@@ -24,7 +23,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
 
-    // Insert a new post into the database
     const newPost = await db
       .insert(forumSchema)
       .values({
@@ -43,7 +41,7 @@ export async function POST(req: Request) {
   }
 }
 
-// Handler for DELETE requests
+// DELETE handler
 export async function DELETE(req: Request) {
   try {
     const url = new URL(req.url);
@@ -53,7 +51,6 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Post ID is required" }, { status: 400 });
     }
 
-    // Delete the post with the provided ID
     await db.delete(forumSchema).where(eq(forumSchema.id, Number(id))).execute();
 
     return NextResponse.json({ message: "Post deleted successfully" });

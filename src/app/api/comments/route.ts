@@ -3,18 +3,16 @@ import { commentsSchema } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-// Handler for GET requests (fetching comments for a specific post)
+// GET Handler
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const postId = url.searchParams.get("postId"); // Extract postId from the query string
+  const postId = url.searchParams.get("postId");
 
-  // Check if postId is provided and is a valid number
   if (!postId || isNaN(Number(postId))) {
     return NextResponse.json({ error: "Invalid or missing postId" }, { status: 400 });
   }
 
   try {
-    // Fetch comments for the specific post
     const comments = await db
       .select()
       .from(commentsSchema)
@@ -32,10 +30,10 @@ export async function GET(req: Request) {
   }
 }
 
-// Handler for POST requests (adding a new comment to a post)
+// POST Handler
 export async function POST(req: Request) {
   const url = new URL(req.url);
-  const postId = url.searchParams.get("postId"); // Extract postId from the query string
+  const postId = url.searchParams.get("postId");
 
   if (!postId || isNaN(Number(postId))) {
     return NextResponse.json({ error: "Invalid or missing postId" }, { status: 400 });
@@ -44,24 +42,20 @@ export async function POST(req: Request) {
   try {
     const { content, commenter } = await req.json();
 
-    // Validate content and commenter
     if (!content || !commenter) {
       return NextResponse.json({ error: "Content and commenter are required" }, { status: 400 });
     }
 
-    // Insert the new comment into the database
     const newComment = await db
       .insert(commentsSchema)
       .values({
-        forum_id: Number(postId), 
+        forum_id: Number(postId),
         content,
         commenter,
         timestamp: new Date().toISOString(),
       })
       .returning()
       .execute();
-
-    console.log("Inserted new comment:", newComment);
 
     return NextResponse.json(newComment[0], { status: 201 });
   } catch (error) {
