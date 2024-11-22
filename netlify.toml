@@ -12,8 +12,8 @@
   force = true
 
 [[redirects]]
-  from = "/api/posts/*"
-  to = "api/posts/:splat"
+  from = "/api/*"
+  to = "api/:splat"
   status = 200
   force = true
 
