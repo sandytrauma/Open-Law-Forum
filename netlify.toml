@@ -6,8 +6,8 @@
   package = "@netlify/plugin-nextjs" # Required for Next.js support on Netlify
 
 [[redirects]]
-  from = "/api/files"
-  to = "/.netlify/functions/api/files/:splat"
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
@@ -18,7 +18,7 @@
   force = true
 
 [[redirects]]
-  from = "/api/comments"
+  from = "/api/comments?postId="
   to = "/.netlify/functions/api/comments/:splat"
   status = 200
   force = true
