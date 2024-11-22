@@ -4,6 +4,9 @@ const nextConfig = {
     unoptimized: true, 
   }, 
 
+ 
+    output: 'export',
+
     // If using Netlify, ensure this setting aligns with its plugin's requirements.
     distDir: '.next', // Default; should not be changed unless necessary.
 
