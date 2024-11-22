@@ -1,6 +1,6 @@
 [build]
   command = "next build"
-
+  publish = "out" # The output directory created by next export
 
 [[plugins]]
   package = "@netlify/plugin-nextjs" # Required for Next.js support on Netlify
@@ -14,7 +14,4 @@
 [functions]
   edge_handlers = "true"
 
-  [context.production]
-  publish = "output/"
-  command = "make publish"
-
+  
