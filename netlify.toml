@@ -11,3 +11,5 @@
   status = 200
   force = true
 
+[functions]
+  edge_handlers = "true"
