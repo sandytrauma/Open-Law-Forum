@@ -12,12 +12,16 @@
   force = true
 
 [[redirects]]
-  from = "/api/*"
-  to = "api/:splat"
+  from = "/api/posts/*"
+  to = "api/posts/:splat"
   status = 200
   force = true
 
-
+[[redirects]]
+  from = "/api/comments/*"
+  to = "api/comments/:splat"
+  status = 200
+  force = true
 
 [functions]
   directory = ".netlify/functions"
