@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { constitutionLink, forumLink, homeLink, navLinks, sectionSublinks } from '@/constants/navLinks';
+import { constitutionLink, forumLink, homeLink, navLinks, sectionSublinks, Central_ActsLink } from '@/constants/navLinks';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,6 +57,11 @@ const Header = () => {
           <li>
             <Link href={homeLink.path} className="text-yellow-200 hover:text-teal-300">
               {homeLink.name}
+            </Link>
+          </li>
+          <li>
+            <Link href={Central_ActsLink.path} className="text-yellow-200 hover:text-teal-300">
+              {Central_ActsLink.name}
             </Link>
           </li>
           <li>

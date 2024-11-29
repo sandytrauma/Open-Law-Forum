@@ -18,7 +18,8 @@ export const navLinks: NavLink[] = [
   { name: "Section's-MVA", path: "/section_mva" },
   { name: "Section's-NIA", path: "/section_nia" },
   { name: "Constitution_of_india", path: "/constitution_articles" },
-  { name: "Tasks/Notes", path: "/forum" }
+  { name: "public_Forum", path: "/forum" },
+  { name: "Central_Acts", path: "/Central_Acts" },
 ];
 
 // Define the Sublink type
@@ -32,8 +33,9 @@ const defaultNavLink: NavLink = { name: "Default", path: "#" };
 
 // Separate the home link
 export const homeLink: NavLink = navLinks.find(link => link.name === "Home") ?? defaultNavLink;
+export const Central_ActsLink: NavLink = navLinks.find(link => link.name === "Central_Acts") ?? defaultNavLink;
 export const constitutionLink: NavLink = navLinks.find(link => link.name === "Constitution_of_india") ?? defaultNavLink;
-export const forumLink: NavLink = navLinks.find(link => link.name === "Tasks/Notes") ?? defaultNavLink;
+export const forumLink: NavLink = navLinks.find(link => link.name === "public_Forum") ?? defaultNavLink;
 
 // Filter and map to create a list of sublinks for sections
 export const sectionSublinks: Sublink[] = navLinks
