@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 // GET Handler
-export async function GET(req: Request) {
+export async function GET(req) {
   const url = new URL(req.url);
   const postId = url.searchParams.get("postId");
 
@@ -31,7 +31,7 @@ export async function GET(req: Request) {
 }
 
 // POST Handler
-export async function POST(req: Request) {
+export async function POST(req) {
   const url = new URL(req.url);
   const postId = url.searchParams.get("postId");
 

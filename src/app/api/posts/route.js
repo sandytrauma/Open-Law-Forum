@@ -15,7 +15,7 @@ export async function GET() {
 }
 
 // POST handler
-export async function POST(req: Request) {
+export async function POST(req) {
   try {
     const { post_title, content, post_author } = await req.json();
 
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 }
 
 // DELETE handler
-export async function DELETE(req: Request) {
+export async function DELETE(req) {
   try {
     const url = new URL(req.url);
     const id = url.searchParams.get("id");
