@@ -13,7 +13,7 @@ import CustomSpinner from "@/components/CustomSpinner";
 const processor = unified()
   .use(remarkParse)
   .use(remarkRehype)
-  .use(rehypeFormat,{blanks: ['body', 'head'], indent: '\t'})
+  .use(rehypeFormat, { blanks: ['body', 'head'], indent: '\t' })
   .use(rehypeStringify);
 
 // Act interface
@@ -51,12 +51,12 @@ type Paragraph = {
   contains?: Paragraph[];
 };
 
-
 // Custom hook for fetching act data
 const useActData = () => {
   const [data, setData] = useState<Act[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+ 
 
   const fetchAllData = async (files: string[]): Promise<Act[]> => {
     const responses = await Promise.all(
@@ -138,9 +138,11 @@ const ActDetails = ({ act, onBack }: { act: Act; onBack: () => void }) => {
         }}
         className="prose"
       />
+      
     </div>
   );
 };
+
 
 const usePagination = <T,>(items: T[], itemsPerPage: number) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -170,12 +172,28 @@ const usePagination = <T,>(items: T[], itemsPerPage: number) => {
 
 // Component to render the chapters of an act
 const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   if (!chapters) {
     return <p>No chapters available for this act.</p>;
   }
 
-  
-  return ( console.log(chapters),
+  return (
     <div className="p-4 bg-gray-100 rounded">
       <h2 className="text-lg font-semibold mb-4">Chapters</h2>
       <ul className="space-y-2">
@@ -186,29 +204,26 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
             <ul className="space-y-2 mt-2">
               {Object.entries(chapter.Sections).map(([sectionKey, section]) => (
                 <li key={sectionKey} className="p-2 border rounded bg-white shadow">
-                  
-                  <h4 className="font-medium">{section.heading}                  
-                  </h4>
-              
+                  <h4 className="font-medium">{section.heading}</h4>
                   <ul className="space-y-2 mt-2">
-                    
                     {Object.entries(section.paragraphs).map(([paragraphKey, paragraph]) => (
                       <li key={paragraphKey} className="p-2 border rounded bg-white shadow whitespace-prewrap">
                         <div className="flex">
-                        {paragraphKey && <p className="text-sm font-semibold text-teal-600">{paragraphKey}:</p>} <span className="ml-2 gap-5"></span>                     
-                        <div
+                          {paragraphKey && (
+                            <p className="text-sm font-semibold text-teal-600">{paragraphKey}:</p>
+                          )}
+                          <div
                             dangerouslySetInnerHTML={{
-                              __html: processor.processSync(paragraph.text || "").toString(),
+                              __html: processor.processSync(paragraph.text || paragraph).toString(),
                             }}
                             className="prose text-teal-600"
                           />
                         </div>
-                      
+
                         {paragraph.contains && (
                           <ul className="space-y-2 mt-2">
                             {Object.entries(paragraph.contains).map(([containsKey, contains]) => (
-                              <li key={containsKey} className="p-2 border rounded bg-white shadow"> 
-                                                           
+                              <li key={containsKey} className="p-2 border rounded bg-white shadow">
                                 <p className="text-sm prose text-teal-900">{contains.text}</p>
                               </li>
                             ))}
@@ -223,17 +238,42 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
           </li>
         ))}
       </ul>
+      {showScrollTop && (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      className="fixed bottom-4 right-4 p-3 bg-teal-500 text-white rounded-full shadow-lg hover:bg-teal-600"
+      aria-label="Scroll to top"
+    >
+      ↑
+    </button>
+  )}
     </div>
   );
 };
-
-
 
 // Main component
 export default function Home() {
   const { data, isLoading, error } = useActData();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAct, setSelectedAct] = useState<Act | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+ 
 
   const filteredData = data.filter((item) =>
     item["Act Title"].toLowerCase().includes(searchTerm.toLowerCase())
@@ -252,7 +292,7 @@ export default function Home() {
   }
 
   if (isLoading) {
-    return <div className="text-center p-4"><CustomSpinner/></div>;
+    return <div className="text-center p-4"><CustomSpinner /></div>;
   }
   if (selectedAct) {
     return (
@@ -267,6 +307,7 @@ export default function Home() {
           {selectedAct["Act Title"]}
         </h1>
         <ChapterList chapters={selectedAct.Chapters} />
+        
       </div>
     );
   }
@@ -303,19 +344,28 @@ export default function Home() {
                     </h2>
                     <div className="mt-2 flex flex-wrap justify-between font-mono text-sm">
                       <p className="text-zinc-300">{item["Enactment Date"]}</p>
-                      <span className="text-zinc-300">{item["Act ID"]}</span>                   
+                      <span className="text-zinc-300">{item["Act ID"]}</span>
                     </div>
                   </div>
                 </li>
-                
-                
               ))}
-              
             </ul>
+            
           )}
+          
         </>
       )}
-      
+ {showScrollTop && (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      className="fixed bottom-4 right-4 p-3 bg-teal-500 text-white rounded-full shadow-lg hover:bg-teal-600"
+      aria-label="Scroll to top"
+    >
+      ↑
+    </button>
+  )}
+     
+
       <div className="mt-6 flex justify-between items-center">
         <button
           onClick={handlePreviousPage}
