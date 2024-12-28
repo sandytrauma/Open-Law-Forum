@@ -12,14 +12,14 @@
   force = true
 
 [[redirects]]
-  from = "/api/posts/*"
-  to = "api/posts/:splat"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
   force = true
 
 [[redirects]]
-  from = "/api/comments/*"
-  to = "api/comments/:splat"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
   force = true
 
