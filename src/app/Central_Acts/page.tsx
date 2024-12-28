@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 //@ts-ignore
+import remark from "remark";
+import remarkHtml from "remark-html";
 import rehypeFormat from "rehype-format";
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
@@ -15,6 +17,7 @@ const processor = unified()
   .use(remarkRehype)
   .use(rehypeFormat, { blanks: ['body', 'head'], indent: '\t' })
   .use(rehypeStringify);
+  
 
 // Act interface
 interface Act {
@@ -56,7 +59,7 @@ const useActData = () => {
   const [data, setData] = useState<Act[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
- 
+
 
   const fetchAllData = async (files: string[]): Promise<Act[]> => {
     const responses = await Promise.all(
@@ -138,7 +141,7 @@ const ActDetails = ({ act, onBack }: { act: Act; onBack: () => void }) => {
         }}
         className="prose"
       />
-      
+
     </div>
   );
 };
@@ -173,6 +176,7 @@ const usePagination = <T,>(items: T[], itemsPerPage: number) => {
 // Component to render the chapters of an act
 const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+ 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -212,6 +216,7 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
                           {paragraphKey && (
                             <p className="text-sm font-semibold text-teal-600">{paragraphKey}:</p>
                           )}
+
                           <div
                             dangerouslySetInnerHTML={{
                               __html: processor.processSync(paragraph.text || paragraph).toString(),
@@ -219,16 +224,38 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
                             className="prose text-teal-600"
                           />
                         </div>
+                            
 
-                        {paragraph.contains && (
+                        {/* Render contains if present */}
+                        {paragraph.contains && paragraph.contains.length > 0 && (
                           <ul className="space-y-2 mt-2">
-                            {Object.entries(paragraph.contains).map(([containsKey, contains]) => (
-                              <li key={containsKey} className="p-2 border rounded bg-white shadow">
-                                <p className="text-sm prose text-teal-900">{contains.text}</p>
+                            
+                            {paragraph.contains.map((containsItem, index) => (
+                              <li key={index} className="p-2 border rounded bg-white shadow">
+                                {/* Check if the containsItem has text */}
+                                {containsItem.text && (
+                                  <p className="text-sm prose text-teal-900">
+                                    {containsItem.text}
+                                  </p>
+                                )}
+                                {/* If there are nested contains, recursively render them */}
+                                {containsItem.contains && containsItem.contains.length > 0 && (
+                                  <ul className="space-y-2 mt-2">
+                                    {containsItem.contains.map((subContainsItem, subIndex) => (
+                                      <li key={subIndex} className="p-2 border rounded bg-white shadow">
+                                        {subContainsItem.text && (
+                                          <p className="text-sm prose text-teal-900">
+                                            {subContainsItem.text}
+                                          </p>
+                                        )}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
                               </li>
                             ))}
-                          </ul>
-                        )}
+                          </ul>)}
+
                       </li>
                     ))}
                   </ul>
@@ -239,17 +266,38 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
         ))}
       </ul>
       {showScrollTop && (
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-4 right-4 p-3 bg-teal-500 text-white rounded-full shadow-lg hover:bg-teal-600"
-      aria-label="Scroll to top"
-    >
-      ↑
-    </button>
-  )}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-4 right-4 p-3 bg-teal-500 text-white rounded-full shadow-lg hover:bg-teal-600"
+          aria-label="Scroll to top"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 };
+const renderContains = (containsArray: Paragraph[])=>{
+  return (
+    <ul className="space-y-2 mt-2">
+      {containsArray.map((containsItem, index) => (
+        <li key={index} className="p-2 border rounded bg-white shadow">
+          {/* Render the text of the containsItem */}
+          {containsItem.text && (
+            <p className="text-sm prose text-teal-900">{containsItem.text}</p>
+          )}
+          {/* If there are nested contains, recursively render them */}
+          {containsItem.contains && containsItem.contains.length > 0 && (
+            <div className="ml-4">
+              {renderContains(containsItem.contains)}
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 
 // Main component
 export default function Home() {
@@ -273,7 +321,7 @@ export default function Home() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
- 
+
 
   const filteredData = data.filter((item) =>
     item["Act Title"].toLowerCase().includes(searchTerm.toLowerCase())
@@ -307,7 +355,7 @@ export default function Home() {
           {selectedAct["Act Title"]}
         </h1>
         <ChapterList chapters={selectedAct.Chapters} />
-        
+
       </div>
     );
   }
@@ -350,21 +398,21 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            
+
           )}
-          
+
         </>
       )}
- {showScrollTop && (
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-4 right-4 p-3 bg-teal-500 text-white rounded-full shadow-lg hover:bg-teal-600"
-      aria-label="Scroll to top"
-    >
-      ↑
-    </button>
-  )}
-     
+      {showScrollTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-4 right-4 p-3 bg-teal-500 text-white rounded-full shadow-lg hover:bg-teal-600"
+          aria-label="Scroll to top"
+        >
+          ↑
+        </button>
+      )}
+
 
       <div className="mt-6 flex justify-between items-center">
         <button

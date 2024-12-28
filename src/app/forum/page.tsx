@@ -47,8 +47,9 @@ const Forum: React.FC = () => {
   // Fetch posts from API
   useEffect(() => {
     const fetchPosts = async () => {
+      const apiurlPosts = process.env.NEXT_PUBLIC_FORUM_URL || "https://Open-law-forum.netlify.app/api"
       try {
-        const res = await fetch("/api/posts");
+        const res = await fetch(`${apiurlPosts}/posts`);
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
@@ -65,8 +66,9 @@ const Forum: React.FC = () => {
   useEffect(() => {
     if (selectedPost) {
       const fetchComments = async () => {
+         const apiurlComments = process.env.NEXT_PUBLIC_FORUM_URL || "https://Open-law-forum.netlify.app/api"
         try {
-          const res = await fetch(`/api/comments?postId=${selectedPost?.id}`);
+          const res = await fetch(`${apiurlComments}/comments?postId=${selectedPost?.id}`);
           if (!res.ok) {
             throw new Error(`HTTP error! status: ${res.status}`);
           }
@@ -82,10 +84,12 @@ const Forum: React.FC = () => {
 
   // Add a new post
   const addPost = async () => {
+   
     if (title.trim() && content.trim() && author.trim()) {
       setLoading(true);
       try {
-        const res = await fetch("/api/posts", {
+        const apiurlAddPosts = process.env.NEXT_PUBLIC_FORUM_URL || "https://Open-law-forum.netlify.app/api"
+        const res = await fetch(`${apiurlAddPosts}/posts`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -120,7 +124,8 @@ const Forum: React.FC = () => {
     if (commentContent.trim()) {
       setLoadingComment(true);
       try {
-        const res = await fetch(`/api/comments?postId=${selectedPost?.id}`, {
+         const apiurlAddComments = process.env.NEXT_PUBLIC_FORUM_URL || "https://Open-law-forum.netlify.app/api"
+        const res = await fetch(`${apiurlAddComments}/comments?postId=${selectedPost?.id}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
