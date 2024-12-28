@@ -26,6 +26,7 @@ const Forum: React.FC = () => {
   const [author, setAuthor] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingComment, setLoadingComment] = useState(false);
+  
 
   const [selectedPost, setSelectedPost] = useState<ForumPost | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -33,7 +34,7 @@ const Forum: React.FC = () => {
 
   // Persisted user name for comments
   const [commenter, setCommenter] = useState<string>("");
-
+ const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const storedCommenter = localStorage.getItem("commenterName") || "";
     setCommenter(storedCommenter);
