@@ -89,7 +89,7 @@ const Forum: React.FC = () => {
     if (title.trim() && content.trim() && author.trim()) {
       setLoading(true);
       try {
-        const apiurlAddPosts = process.env.NEXT_PUBLIC_FORUM_URL || "https://Open-law-forum.netlify.app/api"
+        const apiurlAddPosts = process.env.NEXT_PUBLIC_FORUM_URL || `https://Open-law-forum.netlify.app/api`;
         const res = await fetch(`${apiurlAddPosts}/posts`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -125,7 +125,7 @@ const Forum: React.FC = () => {
     if (commentContent.trim()) {
       setLoadingComment(true);
       try {
-         const apiurlAddComments = process.env.NEXT_PUBLIC_FORUM_URL || "https://Open-law-forum.netlify.app/api"
+         const apiurlAddComments = process.env.NEXT_PUBLIC_FORUM_URL || `https://Open-law-forum.netlify.app/api`;
         const res = await fetch(`${apiurlAddComments}/comments?postId=${selectedPost?.id}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
