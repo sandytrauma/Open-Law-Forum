@@ -4,7 +4,7 @@ const nextConfig = {
     unoptimized: true,  // Disable Next.js image optimization
   },
   reactStrictMode: true,  // Enable React Strict Mode
-  // Remove 'output: "export"' if using server-side rendering or serverless functions
+ output: "export",
 };
 
 export default nextConfig;
