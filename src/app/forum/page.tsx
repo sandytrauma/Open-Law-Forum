@@ -1,7 +1,9 @@
 "use client"
+import Overlay from "@/components/Overlay";
 import { useEffect, useState } from "react";
 import { IoMdAddCircle } from "react-icons/io";
 import { IoMdTrash } from "react-icons/io";
+
 
 interface Comment {
   id: number;
@@ -171,7 +173,10 @@ const Forum: React.FC = () => {
   };
 
   return (
+    <div className="min-h-screen bg-gray-100">
+       <Overlay/>
     <div className="forum-container p-4 w-full h-screen overflow-scroll md:w-3/4 mx-auto rounded-lg shadow-lg bg-teal-300 mt-8">
+     
       <h1 className="text-center mt-5 text-teal-800 text-2xl md:text-3xl font-mono font-extrabold">
         Forum
       </h1>
@@ -302,6 +307,7 @@ const Forum: React.FC = () => {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };
