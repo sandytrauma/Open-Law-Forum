@@ -67,7 +67,7 @@ const Forum: React.FC = () => {
   useEffect(() => {
     if (selectedPost) {
       const fetchComments = async () => {
-         const apiurlComments = process.env.NEXT_PUBLIC_FORUM_URL || "https://Open-law-forum.netlify.app/api"
+         const apiurlComments = process.env.NEXT_PUBLIC_FORUM_URL || "https://Open-law-forum.netlify.app"
         try {
           const res = await fetch(`${apiurlComments}/comments?postId=${selectedPost?.id}`);
           if (!res.ok) {
@@ -89,7 +89,7 @@ const Forum: React.FC = () => {
     if (title.trim() && content.trim() && author.trim()) {
       setLoading(true);
       try {
-        const apiurlAddPosts = process.env.NEXT_PUBLIC_FORUM_URL || `https://Open-law-forum.netlify.app/api`;
+        const apiurlAddPosts = process.env.NEXT_PUBLIC_FORUM_URL || `https://Open-law-forum.netlify.app`;
         const res = await fetch(`${apiurlAddPosts}/posts`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -125,7 +125,7 @@ const Forum: React.FC = () => {
     if (commentContent.trim()) {
       setLoadingComment(true);
       try {
-         const apiurlAddComments = process.env.NEXT_PUBLIC_FORUM_URL || `https://Open-law-forum.netlify.app/api`;
+         const apiurlAddComments = process.env.NEXT_PUBLIC_FORUM_URL || `https://Open-law-forum.netlify.app`;
         const res = await fetch(`${apiurlAddComments}/comments?postId=${selectedPost?.id}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
