@@ -31,6 +31,20 @@ interface Act {
   "Chapters": {
     [key: string]: Chapter;
   };
+  "Parts": {
+    [key: string]: {
+      ID: string;
+      Name: string;
+      Sections: {
+        [sectionKey: string]: {
+          heading: string;
+          paragraphs: {
+            [paragraphKey: string]: string;
+          };
+        };
+      };
+    };
+  };
 }
 
 interface Chapter {
@@ -198,30 +212,30 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
   }
 
   return (
-    <div className="p-4 bg-gray-100 rounded">
+    <div className="p-4 bg-gradient-to-tr from-violet-200 via-red-300 to-violet-300 ring-fuchsia-300 ring-4 rounded shadow-sm w-full prose">
       <h2 className="text-lg font-semibold mb-4">Chapters</h2>
       <ul className="space-y-2">
         {Object.entries(chapters).map(([key, chapter]) => (
-          <li key={key} className="p-2 border rounded bg-white shadow">
+          <li key={key} className="p-2 rounded">
             <h3 className="font-medium">{chapter.Name}</h3>
-            <p className="text-sm text-gray-500">ID: {chapter.ID}</p>
+            <p className="text-sm text-zinc-700">ID: {chapter.ID}</p>
             <ul className="space-y-2 mt-2">
-              {Object.entries(chapter.Sections).map(([sectionKey, section]) => (
-                <li key={sectionKey} className="p-2 border rounded bg-white shadow">
-                  <h4 className="font-medium">{section.heading}</h4>
-                  <ul className="space-y-2 mt-2">
-                    {Object.entries(section.paragraphs).map(([paragraphKey, paragraph]) => (
-                      <li key={paragraphKey} className="p-2 border rounded bg-white shadow whitespace-prewrap">
+              {chapter.Sections && Object.entries(chapter.Sections).map(([sectionKey, section]) => (
+                <li key={sectionKey} className="p-2 rounded bg-red-200 bg-opacity-5 shadow">
+                  <h4 className="font-medium prose">{section.heading}</h4>
+                  <ul className="space-y-2 prose mt-2 font-mono text-justify">
+                    {Object.entries(section.paragraphs??{}).map(([paragraphKey, paragraph]) => (
+                      <li key={paragraphKey} className="p-2 rounded bg-zinc-600 shadow-md shadow-black whitespace-prewrap">
                         <div className="flex">
                           {paragraphKey && (
-                            <p className="text-sm font-semibold text-teal-600">{paragraphKey}:</p>
+                            <p className="text-sm font-semibold text-lime-200 mr-4">*</p>
                           )}
 
                           <div
                             dangerouslySetInnerHTML={{
                               __html: processor.processSync(paragraph.text || paragraph).toString(),
                             }}
-                            className="prose text-teal-600"
+                            className="prose text-zinc-300 font-semibold"
                           />
                         </div>
                             
@@ -279,7 +293,7 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
 };
 const renderContains = (containsArray: Paragraph[])=>{
   return (
-    <ul className="space-y-2 mt-2">
+    <ul className="space-y-2 mt-2 prose">
       {containsArray.map((containsItem, index) => (
         <li key={index} className="p-2 border rounded bg-white shadow">
           {/* Render the text of the containsItem */}
@@ -361,7 +375,7 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-4">
+    <div className="w-full max-w-2xl mx-auto p-4 prose">
       {selectedAct ? (
         <ActDetails act={selectedAct} onBack={() => setSelectedAct(null)} />
       ) : (
