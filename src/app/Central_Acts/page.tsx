@@ -212,7 +212,7 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
   }
 
   return (
-    <div className="p-4 bg-gradient-to-tr from-violet-200 via-red-300 to-violet-300 ring-fuchsia-300 ring-4 rounded shadow-sm w-full prose">
+    <div className="p-4 bg-gradient-to-tr from-violet-200 via-red-300 to-violet-300 ring-fuchsia-300 ring-4 rounded shadow-sm w-full">
       <h2 className="text-lg font-semibold mb-4">Chapters</h2>
       <ul className="space-y-2">
         {Object.entries(chapters).map(([key, chapter]) => (
