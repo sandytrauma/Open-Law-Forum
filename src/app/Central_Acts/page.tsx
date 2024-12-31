@@ -10,6 +10,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import CustomSpinner from "@/components/CustomSpinner";
+import ChatBar from "@/components/ChatBar";
 
 // Processor for Markdown-to-HTML conversion
 const processor = unified()
@@ -369,15 +370,19 @@ export default function Home() {
           {selectedAct["Act Title"]}
         </h1>
         <ChapterList chapters={selectedAct.Chapters} />
-
+        <h1 style={{ textAlign: 'center', padding: '50px 0' }}>Welcome to Legal Chat</h1>
+              <ChatBar />
+          
       </div>
     );
   }
 
   return (
     <div className="w-full max-w-2xl mx-auto p-4 prose">
+   
       {selectedAct ? (
         <ActDetails act={selectedAct} onBack={() => setSelectedAct(null)} />
+        
       ) : (
         <>
           <h1 className="text-center text-2xl font-semibold mb-6">Search for Central Acts</h1>
@@ -411,7 +416,9 @@ export default function Home() {
                   </div>
                 </li>
               ))}
+              
             </ul>
+            
 
           )}
 
@@ -447,6 +454,8 @@ export default function Home() {
           Next
         </button>
       </div>
+      <h1 style={{ textAlign: 'center', padding: '50px 0' }}>Welcome to Legal Chat</h1>
+        <ChatBar />
     </div>
   );
 }
