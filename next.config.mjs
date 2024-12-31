@@ -5,7 +5,7 @@ const nextConfig = {
   },
   reactStrictMode: true,  // Enable React Strict Mode
 
-  output:"Export",
+  output: 'export',
  async rewrites() {
   return [
     {
