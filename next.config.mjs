@@ -5,7 +5,7 @@ const nextConfig = {
   },
   reactStrictMode: true,  // Enable React Strict Mode
 
-
+  output:"Export",
  async rewrites() {
   return [
     {
@@ -17,6 +17,7 @@ const nextConfig = {
       destination: '/.netlify/functions/askai', // Adjust to your function URL if needed
     },
   ];
+
 },
 };
 
