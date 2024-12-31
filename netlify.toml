@@ -1,24 +1,20 @@
 [build]
-  command = "next build"
-  publish = "out" # The output directory created by next export
+  # Command to build the Next.js project
+  command = "next build && next export"
+  
+  # The directory to publish from after building
+  publish = "out" # Directory created by next export
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs" # Required for Next.js support on Netlify
+  # The Netlify plugin for Next.js
+  package = "@netlify/plugin-nextjs" # This plugin ensures proper Next.js functionality on Netlify
 
-[[redirects]]
-  from = "/api/files/*"
-  to = "api/files/:splat"
-  status = 200
-  force = true
 
+# Optional: Add redirects if necessary
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
-  force = true
 
-
-
-[functions]
-  directory = ".netlify/functions"
-  
+  [functions]
+  directory = "out/_next/static/functions"
