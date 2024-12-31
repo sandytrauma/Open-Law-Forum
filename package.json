@@ -13,7 +13,7 @@
   "dependencies": {
     "@neondatabase/serverless": "^0.10.3",
     "@netlify/functions": "^3.0.0",
-    "@netlify/plugin-nextjs": "^5.8.1",
+    "@netlify/plugin-nextjs": "^5.9.2",
     "@tailwindcss/typography": "^0.5.15",
     "@types/chart.js": "^2.9.41",
     "axios": "^1.7.9",
