@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { NextResponse } from 'next/server';
 
 const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;  // Put your OpenAI API key here
@@ -7,12 +6,6 @@ const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;  // Put your Open
 // Define the structure of the request body
 interface RequestBody {
   query: string;
-}
-
-// Define the structure of the response data
-interface ResponseData {
-  answer?: string;
-  error?: string;
 }
 
 export async function POST(req: Request) {
