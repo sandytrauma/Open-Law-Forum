@@ -1,9 +1,9 @@
 [build]
-  command = "next build"
-  publish = "out"
+  command = "next build"    # Builds your Next.js project
+  publish = "out"           # Points to the static output directory
 
 [[plugins]]
-  package = "next-on-netlify"
+  package = "next-on-netlify"  # Use the plugin to ensure Next.js functions are set up correctly
 
 [functions]
-  directory = "out/_next/static/functions" # Where Next.js API functions will be outputted
+  directory = "netlify/functions"  # Serverless functions are usually placed here on Netlify
