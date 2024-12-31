@@ -8,6 +8,12 @@ interface RequestBody {
   query: string;
 }
 
+// Define the structure of the response data
+interface ResponseData {
+  answer?: string;
+  error?: string;
+}
+
 export async function POST(req: Request) {
   try {
     // Parse the incoming request body
@@ -50,10 +56,12 @@ export async function POST(req: Request) {
     // Extract the answer from OpenAI's response
     const answer = response.data.choices[0].message.content.trim();
 
-    // Return the answer in the response
-    return NextResponse.json({ answer });
+    // Return the answer in the response with ResponseData type
+    const responseData: ResponseData = { answer };
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Failed to get response from OpenAI' }, { status: 500 });
+    const errorResponse: ResponseData = { error: 'Failed to get response from OpenAI' };
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }
