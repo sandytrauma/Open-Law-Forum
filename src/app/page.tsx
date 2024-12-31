@@ -178,7 +178,7 @@ This Content Policy is governed by and construed in accordance with the laws of 
                       Privacy Policy
                     </a>
                   </li>
-                  <p className=' text-lime-800 font-bold'>Click to read our policies</p>
+                  <p className='sm:ml-2 text-lime-800 font-bold'>Click to read our policies</p>
                   <li className='bg-red-600 rounded p-1 text-white'>
                     <a href="#" onClick={() => openPolicy("content")}>
                       Content Policy
