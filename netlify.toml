@@ -1,6 +1,6 @@
 [build]
   # Command to build the Next.js project
-  command = "next build && next export"
+  command = "next build"
   
   # The directory to publish from after building
   publish = "out" # Directory created by next export
