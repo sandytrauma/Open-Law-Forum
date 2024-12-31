@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image';
 import Modal from '@/components/Modal';
+import ChatBar from '@/components/ChatBar';
 
 
 const HomePage = () => {
@@ -186,6 +187,8 @@ This Content Policy is governed by and construed in accordance with the laws of 
                   </li>
                 </ul>
               </div>
+              <h1 style={{ textAlign: 'center', padding: '50px 0' }}>Welcome to Legal Chat</h1>
+        <ChatBar />
 
               {isModalOpen && (
                 <Modal onClose={closeModal} policyContent={getPolicyContent()} />
