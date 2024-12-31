@@ -1,4 +1,4 @@
 name: next-on-netlify
 type: plugin
-version: 3.0.0 # or the appropriate version you're using
+version: 3.0.1 # or the appropriate version you're using
 description: A plugin for deploying Next.js apps on Netlify
