@@ -146,6 +146,7 @@ This Content Policy is governed by and construed in accordance with the laws of 
               and awareness about the Indian Constitution. It is not a legal
               document.
             </p>
+            <h1 className="text-teal-600 text-center">Chat with our Legal Assistant by clicking on the <strong className='text-red-600 text-2xl'>"+"</strong> icon for legal queries, simply just paste or type your query from any legal document or ask about any section or law it will give you related details and solve your query in minutes..</h1>
           </div>
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-semibold text-center mb-6">
@@ -187,7 +188,7 @@ This Content Policy is governed by and construed in accordance with the laws of 
                   </li>
                 </ul>
               </div>
-              <h1 style={{ textAlign: 'center', padding: '50px 0' }}>Welcome to Legal Chat</h1>
+              
         <ChatBar />
 
               {isModalOpen && (

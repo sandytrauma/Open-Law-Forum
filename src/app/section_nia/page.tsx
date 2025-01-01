@@ -10,7 +10,7 @@ const section_nia: React.FC = async () => {
 
   return (
     <div>
-      <h1 className="text-center mt-5 text-teal-800 text-2xl md:text-3xl font-mono font-extrabold">National Investigation Agency</h1>
+      <h1 className="text-center mt-5 text-teal-800 text-2xl md:text-3xl font-mono font-extrabold">Negotiable Instruements Act</h1>
       <ActSectionContent data={data} />
     </div>
   );

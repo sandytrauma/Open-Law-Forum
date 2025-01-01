@@ -101,12 +101,27 @@ body,
   animation: scroll-left 50s linear infinite; /* Adjust the duration (10s) as needed */
 }
 
+.auto-scroll h1 {
+  display: block;
+  padding-right: 100%; 
+  animation: scroll-right 30s linear infinite; /* Adjust the duration (10s) as needed */
+}
+
 @keyframes scroll-left {
   0% {
     transform: translateX(0);
   }
   100% {
     transform: translateX(-100%);
+  }
+}
+
+@keyframes scroll-right {
+  100% {
+    transform: translateX(-100%);
+  }
+  0% {
+    transform: translateX(100%);
   }
 }
 
@@ -123,5 +138,22 @@ body,
 @keyframes spinner-d3wgkg {
   to {
      transform: rotate(1turn);
+  }
+}
+
+
+@layer utilities {
+  .bg-clip-text {
+    background-clip: text; /* Standard property */
+    -webkit-background-clip: text; /* Webkit-specific property for Safari and Chrome */
+  }
+
+  .text-gradient {
+    font-size: 48px;
+    background: -webkit-linear-gradient(#eee, #333); /* Gradient from #eee to #333 */
+    -webkit-background-clip: text; /* Apply gradient to text */
+    -webkit-text-fill-color: transparent; /* Makes text transparent so the gradient shows */
+    background-clip: text; /* Standard property for non-Webkit browsers */
+    text-emphasis-color: transparent; /* Some browsers may support this as well */
   }
 }

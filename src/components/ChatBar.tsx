@@ -7,19 +7,22 @@ interface ChatResponseData {
   answer: string;
 }
 
-const ChatBarWrapper = styled.div`
+const ChatBarWrapper = styled.div<{ $isCollapsed: boolean }>`
   position: fixed;
-  padding:2px;
   bottom: 20px;
   right: 20px;
-  width: 300px;
-  max-height: 50vh;
+  width: ${({ $isCollapsed }) => ($isCollapsed ? '50px' : '300px')};
+  max-height: ${({ $isCollapsed }) => ($isCollapsed ? '50px' : '50vh')};
   overflow-y: scroll;
   background: #ffffff;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   z-index: 1000;
-  padding: 20px;
+  transition: all 0.3s ease;
+  padding: ${({ $isCollapsed }) => ($isCollapsed ? '0' : '20px')};
+  display: flex;
+  flex-direction: column;
+  align-items: ${({ $isCollapsed }) => ($isCollapsed ? 'center' : 'flex-start')};
 `;
 
 const ChatHeader = styled.div`
@@ -56,10 +59,29 @@ const ChatResponse = styled.div`
   min-height: 100px;
 `;
 
+const ToggleButton = styled.button`
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050; /* Ensure it's above other elements */
+`;
+
 const ChatBar: React.FC = () => {
   const [query, setQuery] = useState<string>(''); // Type for query is string
   const [response, setResponse] = useState<string>(''); // Type for response is string
   const [loading, setLoading] = useState<boolean>(false); // Type for loading is boolean
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false); // Track if chat is collapsed
 
   const handleSubmit = async () => {
     if (!query.trim()) return;
@@ -78,19 +100,33 @@ const ChatBar: React.FC = () => {
     }
   };
 
+  const toggleChat = () => {
+    setIsCollapsed(!isCollapsed); // Toggle the collapse/expand state
+  };
+
   return (
-    <ChatBarWrapper>
-      <ChatHeader>Legal Chat</ChatHeader>
-      <ChatInput
-        placeholder="Paste your legal query here..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)} // Ensure correct type for event
-      />
-      <SendButton onClick={handleSubmit} disabled={loading}>
-        {loading ? 'Processing...' : 'Get Answer'}
-      </SendButton>
-      {response && <ChatResponse>{response}</ChatResponse>}
-    </ChatBarWrapper>
+    <>
+      <ChatBarWrapper $isCollapsed={isCollapsed} className="m-9">
+        {!isCollapsed && (
+          <>
+            <ChatHeader>Legal Gup-Shup with <strong className="text-gradient">legalTai</strong></ChatHeader>
+            <ChatInput
+              placeholder="Paste your legal query here..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)} // Ensure correct type for event
+            />
+            <SendButton onClick={handleSubmit} disabled={loading}>
+              {loading ? 'Processing...' : 'Get Answer'}
+            </SendButton>
+            {response && <ChatResponse>{response}</ChatResponse>}
+          </>
+        )}
+      </ChatBarWrapper>
+
+      <ToggleButton onClick={toggleChat}>
+        {isCollapsed ? '+' : '–'}
+      </ToggleButton>
+    </>
   );
 };
 

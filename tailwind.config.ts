@@ -16,5 +16,6 @@ const config: Config = {
     },
   },
   plugins: [ require('@tailwindcss/typography'),],
+  safelist: ['text-gradient'],
 };
 export default config;
