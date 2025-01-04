@@ -2,12 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import { constitutionLink, forumLink, homeLink, navLinks, sectionSublinks, Central_ActsLink } from '@/constants/navLinks';
+import React, { useEffect, useRef, useState } from 'react';
+import { constitutionLink, forumLink, homeLink, sectionSublinks, Central_ActsLink } from '@/constants/navLinks';
 
-const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+const Header: React.FC = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+
+  // Create a reference for the dropdown menu's <li> element
+  const dropdownRef = useRef<HTMLLIElement | null>(null);
 
   // Toggle mobile menu visibility
   const handleMenuClick = () => {
@@ -19,18 +22,35 @@ const Header = () => {
     setIsDropdownOpen(prev => !prev);
   };
 
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    // Function to handle click outside the dropdown
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    // Add event listener for clicks
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <nav className="flex flex-col md:flex-row items-center justify-between w-full h-auto p-4 bg-gray-800">
-     
-     <div>
-      <Image
-      src="/reshot-icon-law-Q7HKRPSXMY.svg"
-      height={48}
-      width={48}
-      alt='Logo'
-      priority
-      />
-     </div>
+      <div>
+        <Image
+          src="/reshot-icon-law-Q7HKRPSXMY.svg"
+          height={48}
+          width={48}
+          alt="Logo"
+          priority
+        />
+      </div>
 
       {/* Mobile Menu Button */}
       <button
@@ -39,11 +59,23 @@ const Header = () => {
         aria-label="Toggle navigation"
       >
         {isOpen ? (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         ) : (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
           </svg>
         )}
@@ -69,9 +101,9 @@ const Header = () => {
               {constitutionLink.name}
             </Link>
           </li>
-          
+
           {/* Dropdown Trigger */}
-          <li className="relative ">
+          <li className="relative" ref={dropdownRef}>
             <button
               onClick={handleDropdownClick}
               className="text-yellow-200 hover:text-teal-300 focus:outline-none"
@@ -106,7 +138,6 @@ const Header = () => {
             </Link>
           </li>
         </ul>
-
       </div>
     </nav>
   );

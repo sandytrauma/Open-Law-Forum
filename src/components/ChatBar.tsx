@@ -60,7 +60,7 @@ const ChatResponse = styled.div`
 `;
 
 const ToggleButton = styled.button`
-  background-color: #0070f3;
+  background-color: #e88074;
   color: white;
   border: none;
   border-radius: 50%;
@@ -81,7 +81,7 @@ const ChatBar: React.FC = () => {
   const [query, setQuery] = useState<string>(''); // Type for query is string
   const [response, setResponse] = useState<string>(''); // Type for response is string
   const [loading, setLoading] = useState<boolean>(false); // Type for loading is boolean
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false); // Track if chat is collapsed
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true); // Track if chat is collapsed
 
   const handleSubmit = async () => {
     if (!query.trim()) return;
@@ -106,7 +106,7 @@ const ChatBar: React.FC = () => {
 
   return (
     <>
-      <ChatBarWrapper $isCollapsed={isCollapsed} className="m-9">
+      <ChatBarWrapper $isCollapsed={isCollapsed} className="mr-11 mb-11">
         {!isCollapsed && (
           <>
             <ChatHeader>Legal Gup-Shup with <strong className="text-gradient">legalTai</strong></ChatHeader>
@@ -123,7 +123,7 @@ const ChatBar: React.FC = () => {
         )}
       </ChatBarWrapper>
 
-      <ToggleButton onClick={toggleChat}>
+      <ToggleButton className='mr-9 hover:bg-red-600' onClick={toggleChat}>
         {isCollapsed ? '+' : '–'}
       </ToggleButton>
     </>

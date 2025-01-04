@@ -57,12 +57,13 @@ const Footer: React.FC = () => {
                 </div>
                 <div className="mt-6 border-t border-gray-700 pt-4 text-center">
                     <p className="text-sm">
-                        &copy; {new Date().getFullYear()} Site created by{' '}
+                        &copy; {new Date().getFullYear()} Site created by
                         <a
-                            href="https://github.com/sandytrauma/sections-of-law"
+                            href="https://github.com/sandytrauma/Open-Law-Forum"
                             className="github-button"
+                            target='blank'
                         >
-                            sandytrauma
+                           {' SandyTrauma'}
                         </a>. All rights reserved.
                     </p>
                 </div>
