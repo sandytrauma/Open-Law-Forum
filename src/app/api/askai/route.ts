@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     }
 
     // Define the prompt for OpenAI
-    const prompt = `Provide a detailed legal answer related to Indian law for the following query:\n\n${query}\n\nPlease ensure the answer is strictly based on Indian legal matters.`;
+    const prompt = `Provide a detailed legal answer understood to non-legal person and also it should be of use as a study material by law students, related to Indian law for the following query:\n\n${query}\n\nPlease ensure the answer is strictly based on Indian legal matters based on CRPC, NIA, CPC, HMA, IDA, IEA, IPC, MVA and other Central Acts. if the user say HI then reply with proper salutation adn ask how you may help the user only and if user asks you name then strictly reply your name is LegalTai, created with pleasure to answer your legal queries by SandyTrauma only and if query is not based on any of the above or legal matter or INDIAN Law then return with the answer that you are not trained to answer this query and give the following link to the user directing the user to visit this site for queries other than any legal matter and provide the following text : <button onclick="window.location.href='https://ai-chat4u.netlify.app/'">Visit AI Chat 4U</button>`;
 
     // Make the request to the OpenAI API
     const response = await axios.post(

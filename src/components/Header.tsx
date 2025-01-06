@@ -3,7 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
-import { constitutionLink, forumLink, homeLink, sectionSublinks, Central_ActsLink } from '@/constants/navLinks';
+import { constitutionLink, forumLink, homeLink, sectionSublinks, Central_ActsLink, signInLink } from '@/constants/navLinks';
+import { UserButton } from '@clerk/nextjs';
+import { SignIn } from '@clerk/clerk-react';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);

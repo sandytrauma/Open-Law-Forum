@@ -77,6 +77,10 @@ const ToggleButton = styled.button`
   z-index: 1050; /* Ensure it's above other elements */
 `;
 
+const handleExternalLinkClick = () => {
+  window.location.href = 'https://ai-chat4u.netlify.app/';
+};
+
 const ChatBar: React.FC = () => {
   const [query, setQuery] = useState<string>(''); // Type for query is string
   const [response, setResponse] = useState<string>(''); // Type for response is string
@@ -113,7 +117,8 @@ const ChatBar: React.FC = () => {
             <ChatInput
               placeholder="Paste your legal query here..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)} // Ensure correct type for event
+              onChange={(e) => setQuery(e.target.value)} // Ensure correct type 
+              className="min-h-20"
             />
             <SendButton onClick={handleSubmit} disabled={loading}>
               {loading ? 'Processing...' : 'Get Answer'}

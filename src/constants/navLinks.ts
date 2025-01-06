@@ -37,6 +37,7 @@ export const Central_ActsLink: NavLink = navLinks.find(link => link.name === "Ce
 export const constitutionLink: NavLink = navLinks.find(link => link.name === "Constitution_of_india") ?? defaultNavLink;
 export const forumLink: NavLink = navLinks.find(link => link.name === "public_Forum") ?? defaultNavLink;
 
+
 // Filter and map to create a list of sublinks for sections
 export const sectionSublinks: Sublink[] = navLinks
   .filter(link => link.name.startsWith("Section's"))

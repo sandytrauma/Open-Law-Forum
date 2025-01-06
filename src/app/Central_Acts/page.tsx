@@ -18,7 +18,7 @@ const processor = unified()
   .use(remarkRehype)
   .use(rehypeFormat, { blanks: ['body', 'head'], indent: '\t' })
   .use(rehypeStringify);
-  
+
 
 // Act interface
 interface Act {
@@ -29,6 +29,10 @@ interface Act {
     "0": string;
     text: string;
   };
+  "Act Section": {
+    "0": string;
+    text: string;
+  }
   "Chapters": {
     [key: string]: Chapter;
   };
@@ -136,6 +140,22 @@ const getActDefinitionText = (definition: Act["Act Definition"]): string => {
   return "No definition available";
 };
 
+const getActSectionText = (Section: Act["Act Section"]): string => {
+  if (Array.isArray(Section)) {
+    return (
+      Section.map((item) => (typeof item === "string" ? item : item.text)).join(", ") ||
+      "No section available"
+    );
+  }
+  if (typeof Section === "object" && Section !== null) {
+    return Section.text || JSON.stringify(Section);
+  }
+  if (typeof Section === "string") {
+    return Section;
+  }
+  return "No section available";
+}
+
 // Component to render an individual act
 const ActDetails = ({ act, onBack }: { act: Act; onBack: () => void }) => {
   return (
@@ -158,6 +178,8 @@ const ActDetails = ({ act, onBack }: { act: Act; onBack: () => void }) => {
       />
 
     </div>
+
+
   );
 };
 
@@ -191,7 +213,7 @@ const usePagination = <T,>(items: T[], itemsPerPage: number) => {
 // Component to render the chapters of an act
 const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
- 
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -225,7 +247,7 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
                 <li key={sectionKey} className="p-2 rounded bg-red-200 bg-opacity-5 shadow">
                   <h4 className="font-medium prose">{section.heading}</h4>
                   <ul className="space-y-2 prose mt-2 font-mono text-justify">
-                    {Object.entries(section.paragraphs??{}).map(([paragraphKey, paragraph]) => (
+                    {Object.entries(section.paragraphs ?? {}).map(([paragraphKey, paragraph]) => (
                       <li key={paragraphKey} className="p-2 rounded bg-zinc-600 shadow-md shadow-black whitespace-prewrap">
                         <div className="flex">
                           {paragraphKey && (
@@ -238,13 +260,14 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
                             }}
                             className="prose text-zinc-300 font-semibold"
                           />
+                         
                         </div>
-                            
+
 
                         {/* Render contains if present */}
                         {paragraph.contains && paragraph.contains.length > 0 && (
                           <ul className="space-y-2 mt-2">
-                            
+
                             {paragraph.contains.map((containsItem, index) => (
                               <li key={index} className="p-2 border rounded bg-white shadow">
                                 {/* Check if the containsItem has text */}
@@ -292,7 +315,8 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
     </div>
   );
 };
-const renderContains = (containsArray: Paragraph[])=>{
+const renderContains = (containsArray: Paragraph[]) => {
+  console.log(containsArray);  // Log the array of contains
   return (
     <ul className="space-y-2 mt-2 prose">
       {containsArray.map((containsItem, index) => (
@@ -371,18 +395,18 @@ export default function Home() {
         </h1>
         <ChapterList chapters={selectedAct.Chapters} />
         <h1 style={{ textAlign: 'center', padding: '50px 0' }}>Welcome to Legal Chat</h1>
-              <ChatBar />
-          
+        <ChatBar />
+
       </div>
     );
   }
 
   return (
     <div className="w-full max-w-2xl mx-auto p-4 prose">
-   
+
       {selectedAct ? (
         <ActDetails act={selectedAct} onBack={() => setSelectedAct(null)} />
-        
+
       ) : (
         <>
           <h1 className="text-center text-2xl font-semibold mb-6">Search for Central Acts</h1>
@@ -416,9 +440,9 @@ export default function Home() {
                   </div>
                 </li>
               ))}
-              
+
             </ul>
-            
+
 
           )}
 
@@ -455,7 +479,7 @@ export default function Home() {
         </button>
       </div>
       <h1 style={{ textAlign: 'center', padding: '50px 0' }}>Welcome to Legal Chat</h1>
-        <ChatBar />
+      <ChatBar />
     </div>
   );
 }
