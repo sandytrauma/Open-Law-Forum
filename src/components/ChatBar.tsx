@@ -95,7 +95,7 @@ const ChatBar: React.FC = () => {
     setLoading(true);
 
     try {
-      const result = await axios.post<ChatResponseData>('/api/askai', { query });
+      const result = await axios.post<ChatResponseData>('/utils/askai', { query });
       setResponse(result.data.answer); // Ensure result is typed correctly
     } catch (error) {
       setResponse('There was an error processing your request.');

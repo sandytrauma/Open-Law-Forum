@@ -13,13 +13,14 @@ export const metadata: Metadata = {
   
 };
 
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
       
@@ -33,7 +34,7 @@ export default function RootLayout({
         
       </body>
     </html>
-    </ClerkProvider>
+
     
   );
 }
