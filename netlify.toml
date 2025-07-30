@@ -9,6 +9,3 @@
   from = "/api/askai"
   to = "/.netlify/functions/askai"
   status = 200
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
