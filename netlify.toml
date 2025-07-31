@@ -3,7 +3,7 @@
   publish = ".next"
 
 [functions]
-  directory = "netlify/functions"
+  directory = "src/app/netlify/functions"
 
 [[redirects]]
   from = "/api/askai"
