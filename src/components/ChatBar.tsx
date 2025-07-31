@@ -110,7 +110,7 @@ const ChatBar: React.FC = () => {
 
   return (
     <>
-      <ChatBarWrapper $isCollapsed={isCollapsed} className="mr-11 mb-11">
+      <ChatBarWrapper $isCollapsed={isCollapsed} className="mr-2 mb-11">
         {!isCollapsed && (
           <>
             <ChatHeader>Legal Gup-Shup with <strong className="text-gradient">legalTai</strong></ChatHeader>
