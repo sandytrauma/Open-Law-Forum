@@ -9,3 +9,8 @@
   from = "/api/askai"
   to = "/.netlify/functions/askai"
   status = 200
+
+[[redirects]]
+from = "/api/posts"
+to  = "/.netlify/functions/posts"
+status  = 200
