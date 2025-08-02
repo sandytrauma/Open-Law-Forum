@@ -1,8 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import CustomSpinner from './CustomSpinnerChatBar';
 
+import rehypeFormat from "rehype-format";
+import rehypeStringify from "rehype-stringify";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
+
+
+const processor = unified()
+  .use(remarkParse)
+  .use(remarkRehype)
+  .use(rehypeFormat, { blanks: ["body", "head"], indent: "\t" })
+  .use(rehypeStringify);
 
 // Define types for state
 interface ChatResponseData {
@@ -53,13 +65,12 @@ const SendButton = styled.button`
 `;
 
 const ChatResponse = styled.div`
-  background: #fa9e9eff;
+  background: #f3cfcfff;
   padding: 15px;
   border-radius: 8px;
   margin-top: 10px;
-  font-size: 14px;
+  font-size:14px;
   color:zinc;
-
 `;
 
 const ToggleButton = styled.button`
@@ -80,6 +91,8 @@ const ToggleButton = styled.button`
   z-index: 1050; /* Ensure it's above other elements */
 `;
 
+
+
 const handleExternalLinkClick = () => {
   window.location.href = 'https://ai-chat4u.netlify.app/';
 };
@@ -88,13 +101,33 @@ const ChatBar: React.FC = () => {
   const [query, setQuery] = useState<string>(''); // Type for query is string
   const [response, setResponse] = useState<string>(''); // Type for response is string
   const [loading, setLoading] = useState<boolean>(false); // Type for loading is boolean
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(true); // Track if chat is collapsed
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true); // Track if 
+  // chat is collapsed
+
+    const [htmlResponse, setHtmlResponse] = useState<string>('');
+
+  useEffect(() => {
+    const processMarkdown = async () => {
+      if (response) {
+        try {
+          const vfile = await processor.process(response);
+          // Set the state with the converted HTML string.
+          setHtmlResponse(String(vfile));
+        } catch (error) {
+          console.error("Failed to process markdown:", error);
+          setHtmlResponse(`<p>Error rendering response.</p>`);
+        }
+      }
+    };
+    processMarkdown();
+  }, [response]);
 
   const handleSubmit = async () => {
     if (!query.trim()) return;
 
     // Clear previous response before fetching a new one
     setResponse('');
+    setHtmlResponse('');
     setLoading(true);
 
     try {
@@ -126,7 +159,12 @@ const ChatBar: React.FC = () => {
             <SendButton onClick={handleSubmit} disabled={loading}>
               {loading ? <CustomSpinner/> : 'Get Answer'}
             </SendButton>
-            {response && <ChatResponse className='text-justify'>{response}</ChatResponse>}
+            {htmlResponse && (
+              <ChatResponse
+                className='prose text-justify'
+                dangerouslySetInnerHTML={{ __html: htmlResponse }}
+              />
+            )}
           </>
         )}
       </ChatBarWrapper>
