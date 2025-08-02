@@ -53,7 +53,7 @@ const SendButton = styled.button`
 `;
 
 const ChatResponse = styled.div`
-  background: #e9b9b9ff;
+  background: #fa9e9eff;
   padding: 15px;
   border-radius: 8px;
   margin-top: 10px;
