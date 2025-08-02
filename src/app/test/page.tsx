@@ -1,10 +1,15 @@
-import React from 'react'
+import { AppSidebar } from "@/components/App-Sidebar"
+
+
 
 const page = () => {
   return (
-    <div>
-      
-    </div>
+
+     <div className="w-full">
+      <AppSidebar/>
+ 
+     </div>
+
   )
 }
 

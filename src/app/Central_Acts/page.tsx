@@ -16,9 +16,8 @@ import ChatBar from "@/components/ChatBar";
 const processor = unified()
   .use(remarkParse)
   .use(remarkRehype)
-  .use(rehypeFormat, { blanks: ['body', 'head'], indent: '\t' })
+  .use(rehypeFormat, { blanks: ["body", "head"], indent: "\t" })
   .use(rehypeStringify);
-
 
 // Act interface
 interface Act {
@@ -28,11 +27,13 @@ interface Act {
   "Act Definition": {
     "0": string;
     text: string;
+    [key: string]: any; // Added index signature
   };
   "Act Section": {
     "0": string;
     text: string;
-  }
+    [key: string]: any; // Added index signature
+  };
   "Chapters": {
     [key: string]: Chapter;
   };
@@ -67,18 +68,19 @@ interface Section {
   };
 }
 
-type Paragraph = {
-  paragraph?: string;
-  text?: string;
-  contains?: Paragraph[];
-};
+type Paragraph =
+  | string
+  | {
+      text?: string;
+      contains?: Paragraph[];
+      [key: string]: any; // Added index signature for other properties like '0', '1', etc.
+    };
 
 // Custom hook for fetching act data
 const useActData = () => {
   const [data, setData] = useState<Act[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
 
   const fetchAllData = async (files: string[]): Promise<Act[]> => {
     const responses = await Promise.all(
@@ -142,19 +144,121 @@ const getActDefinitionText = (definition: Act["Act Definition"]): string => {
 
 const getActSectionText = (Section: Act["Act Section"]): string => {
   if (Array.isArray(Section)) {
-    return (
-      Section.map((item) => (typeof item === "string" ? item : item.text)).join(", ") ||
-      "No section available"
-    );
+    // Handle array of strings or objects with a 'text' property
+    const texts = Section.map((item) => {
+      if (typeof item === "string") {
+        return item;
+      }
+      if (typeof item === "object" && item !== null && "text" in item) {
+        return item.text;
+      }
+      return ""; // Handle cases where an item is not a string or a valid object
+    }).filter(Boolean); // Filter out any empty strings
+
+    return texts.length > 0 ? texts.join(", ") : "No section available";
   }
-  if (typeof Section === "object" && Section !== null) {
-    return Section.text || JSON.stringify(Section);
+
+  // Handle a single object with a 'text' property
+  if (typeof Section === "object" && Section !== null && "text" in Section) {
+    return Section.text;
   }
+
+  // Handle a single string
   if (typeof Section === "string") {
     return Section;
   }
+
+  // Handle other cases (null, undefined, invalid objects)
   return "No section available";
-}
+};
+
+// A recursive component to render nested paragraphs
+const renderParagraphs = (paragraphs: { [key: string]: Paragraph }) => {
+  return Object.entries(paragraphs).map(([key, content]) => {
+    // If the content is a string, render it directly
+    if (typeof content === 'string') {
+      return (
+        <li key={key} className="p-2 rounded bg-zinc-600 shadow-md shadow-black whitespace-prewrap">
+          <div className="flex">
+            {key && <p className="text-sm font-semibold text-lime-200 mr-4">*</p>}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: processor.processSync(content).toString(),
+              }}
+              className="prose text-zinc-300 font-semibold"
+            />
+          </div>
+        </li>
+      );
+    }
+
+    // If the content is an object, handle its text and nested 'contains'
+    return (
+      <li key={key} className="p-2 rounded bg-zinc-600 shadow-md shadow-black whitespace-prewrap">
+        <div className="flex">
+          {key && <p className="text-sm font-semibold text-lime-200 mr-4">*</p>}
+          {content.text && (
+            <div
+              dangerouslySetInnerHTML={{
+                __html: processor.processSync(content.text).toString(),
+              }}
+              className="prose text-zinc-300 font-semibold"
+            />
+          )}
+        </div>
+        {/* Recursively render nested 'contains' array */}
+        {content.contains && content.contains.length > 0 && (
+          <div className="ml-4">
+            {renderNestedContains(content.contains)}
+          </div>
+        )}
+      </li>
+    );
+  });
+};
+
+// A recursive helper function for rendering 'contains' arrays
+const renderNestedContains = (containsArray: Paragraph[]) => {
+  return (
+    <ul className="space-y-2 mt-2 prose">
+      {containsArray.map((item, index) => {
+        // If the item is a string, render it directly
+        if (typeof item === 'string') {
+          return (
+            <li key={index} className="p-2 border rounded bg-white shadow">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: processor.processSync(item).toString(),
+                }}
+                className="prose text-teal-900"
+              />
+            </li>
+          );
+        }
+
+        // If the item is an object, render its text and nested 'contains'
+        return (
+          <li key={index} className="p-2 border rounded bg-white shadow">
+            {item.text && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: processor.processSync(item.text).toString(),
+                }}
+                className="prose text-teal-900"
+              />
+            )}
+            {item.contains && item.contains.length > 0 && (
+              <div className="ml-4">
+                {renderNestedContains(item.contains)}
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
+
 
 // Component to render an individual act
 const ActDetails = ({ act, onBack }: { act: Act; onBack: () => void }) => {
@@ -176,10 +280,7 @@ const ActDetails = ({ act, onBack }: { act: Act; onBack: () => void }) => {
         }}
         className="prose"
       />
-
     </div>
-
-
   );
 };
 
@@ -214,7 +315,6 @@ const usePagination = <T,>(items: T[], itemsPerPage: number) => {
 const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 300) {
@@ -230,6 +330,7 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   if (!chapters) {
     return <p>No chapters available for this act.</p>;
   }
@@ -247,55 +348,7 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
                 <li key={sectionKey} className="p-2 rounded bg-red-200 bg-opacity-5 shadow">
                   <h4 className="font-medium prose">{section.heading}</h4>
                   <ul className="space-y-2 prose mt-2 font-mono text-justify">
-                    {Object.entries(section.paragraphs ?? {}).map(([paragraphKey, paragraph]) => (
-                      <li key={paragraphKey} className="p-2 rounded bg-zinc-600 shadow-md shadow-black whitespace-prewrap">
-                        <div className="flex">
-                          {paragraphKey && (
-                            <p className="text-sm font-semibold text-lime-200 mr-4">*</p>
-                          )}
-
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: processor.processSync(paragraph.text || paragraph).toString(),
-                            }}
-                            className="prose text-zinc-300 font-semibold"
-                          />
-                         
-                        </div>
-
-
-                        {/* Render contains if present */}
-                        {paragraph.contains && paragraph.contains.length > 0 && (
-                          <ul className="space-y-2 mt-2">
-
-                            {paragraph.contains.map((containsItem, index) => (
-                              <li key={index} className="p-2 border rounded bg-white shadow">
-                                {/* Check if the containsItem has text */}
-                                {containsItem.text && (
-                                  <p className="text-sm prose text-teal-900">
-                                    {containsItem.text}
-                                  </p>
-                                )}
-                                {/* If there are nested contains, recursively render them */}
-                                {containsItem.contains && containsItem.contains.length > 0 && (
-                                  <ul className="space-y-2 mt-2">
-                                    {containsItem.contains.map((subContainsItem, subIndex) => (
-                                      <li key={subIndex} className="p-2 border rounded bg-white shadow">
-                                        {subContainsItem.text && (
-                                          <p className="text-sm prose text-teal-900">
-                                            {subContainsItem.text}
-                                          </p>
-                                        )}
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
-                              </li>
-                            ))}
-                          </ul>)}
-
-                      </li>
-                    ))}
+                    {renderParagraphs(section.paragraphs ?? {})}
                   </ul>
                 </li>
               ))}
@@ -305,7 +358,7 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
       </ul>
       {showScrollTop && (
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="fixed bottom-4 right-4 p-3 bg-teal-500 text-white rounded-full shadow-lg hover:bg-teal-600"
           aria-label="Scroll to top"
         >
@@ -315,28 +368,6 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
     </div>
   );
 };
-const renderContains = (containsArray: Paragraph[]) => {
-  console.log(containsArray);  // Log the array of contains
-  return (
-    <ul className="space-y-2 mt-2 prose">
-      {containsArray.map((containsItem, index) => (
-        <li key={index} className="p-2 border rounded bg-white shadow">
-          {/* Render the text of the containsItem */}
-          {containsItem.text && (
-            <p className="text-sm prose text-teal-900">{containsItem.text}</p>
-          )}
-          {/* If there are nested contains, recursively render them */}
-          {containsItem.contains && containsItem.contains.length > 0 && (
-            <div className="ml-4">
-              {renderContains(containsItem.contains)}
-            </div>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-};
-
 
 // Main component
 export default function Home() {
@@ -361,7 +392,6 @@ export default function Home() {
     };
   }, []);
 
-
   const filteredData = data.filter((item) =>
     item["Act Title"].toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -379,7 +409,11 @@ export default function Home() {
   }
 
   if (isLoading) {
-    return <div className="text-center p-4"><CustomSpinner /></div>;
+    return (
+      <div className="text-center p-4">
+        <CustomSpinner />
+      </div>
+    );
   }
   if (selectedAct) {
     return (
@@ -394,19 +428,16 @@ export default function Home() {
           {selectedAct["Act Title"]}
         </h1>
         <ChapterList chapters={selectedAct.Chapters} />
-        <h1 style={{ textAlign: 'center', padding: '50px 0' }}>Welcome to Legal Chat</h1>
+        <h1 style={{ textAlign: "center", padding: "50px 0" }}>Welcome to Legal Chat</h1>
         <ChatBar />
-
       </div>
     );
   }
 
   return (
     <div className="w-full max-w-2xl mx-auto p-4 prose">
-
       {selectedAct ? (
         <ActDetails act={selectedAct} onBack={() => setSelectedAct(null)} />
-
       ) : (
         <>
           <h1 className="text-center text-2xl font-semibold mb-6">Search for Central Acts</h1>
@@ -440,24 +471,19 @@ export default function Home() {
                   </div>
                 </li>
               ))}
-
             </ul>
-
-
           )}
-
         </>
       )}
       {showScrollTop && (
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="fixed bottom-4 right-4 p-3 bg-teal-500 text-white rounded-full shadow-lg hover:bg-teal-600"
           aria-label="Scroll to top"
         >
           ↑
         </button>
       )}
-
 
       <div className="mt-6 flex justify-between items-center">
         <button
@@ -478,7 +504,7 @@ export default function Home() {
           Next
         </button>
       </div>
-      <h1 style={{ textAlign: 'center', padding: '50px 0' }}>Welcome to Legal Chat</h1>
+      <h1 style={{ textAlign: "center", padding: "50px 0" }}>Welcome to Legal Chat</h1>
       <ChatBar />
     </div>
   );

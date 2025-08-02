@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import CustomSpinner from './CustomSpinnerChatBar';
+
 
 // Define types for state
 interface ChatResponseData {
@@ -10,9 +12,9 @@ interface ChatResponseData {
 const ChatBarWrapper = styled.div<{ $isCollapsed: boolean }>`
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  right: 10px;
   width: ${({ $isCollapsed }) => ($isCollapsed ? '50px' : '300px')};
-  max-height: ${({ $isCollapsed }) => ($isCollapsed ? '50px' : '50vh')};
+  max-height: ${({ $isCollapsed }) => ($isCollapsed ? '50px' : '80vh')};
   overflow-y: scroll;
   background: #ffffff;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -51,12 +53,13 @@ const SendButton = styled.button`
 `;
 
 const ChatResponse = styled.div`
-  background: #f5f5f5;
+  background: #e9b9b9ff;
   padding: 15px;
   border-radius: 8px;
   margin-top: 10px;
   font-size: 14px;
-  min-height: 100px;
+  color:zinc;
+
 `;
 
 const ToggleButton = styled.button`
@@ -121,9 +124,9 @@ const ChatBar: React.FC = () => {
               className="min-h-20"
             />
             <SendButton onClick={handleSubmit} disabled={loading}>
-              {loading ? 'Processing...' : 'Get Answer'}
+              {loading ? <CustomSpinner/> : 'Get Answer'}
             </SendButton>
-            {response && <ChatResponse>{response}</ChatResponse>}
+            {response && <ChatResponse className='text-justify'>{response}</ChatResponse>}
           </>
         )}
       </ChatBarWrapper>
