@@ -85,14 +85,14 @@ export default function DocAnalyzerPage(){
           {/* Input Panel (Left Side) */}
           <div className="w-full md:w-1/2 flex flex-col bg-gray-800 p-6 rounded-3xl shadow-2xl border border-gray-700">
             <h2 className="text-2xl font-bold mb-4 flex items-center text-gray-200">
-              <FaClipboardList className="mr-2" /> Paste Your Document
+              <FaClipboardList className="mr-2" /> Paste Your Document text
             </h2>
             <form onSubmit={handleAnalyze} className="flex-1 flex flex-col">
               <textarea
                 value={documentText}
                 onChange={(e) => setDocumentText(e.target.value)}
                 className="flex-1 w-full p-4 text-sm bg-gray-900 text-gray-200 border border-gray-700 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 placeholder-gray-500"
-                placeholder="Paste your legal document here..."
+                placeholder="Paste your legal document text here..."
                 rows={15}
               ></textarea>
               <button
