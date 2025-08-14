@@ -180,6 +180,23 @@ body,
   }
 }
 
+@layer utilities {
+  .bg-clip-text {
+    background-clip: text; /* Standard property */
+    -webkit-background-clip: text; /* Webkit-specific property for Safari and Chrome */
+  }
+
+
+.text-gradient-central-acts{
+   font-size: 20px;
+    background: -webkit-linear-gradient(#313b02, #499119); /* Gradient from #eee to #333 */
+    -webkit-background-clip: text; /* Apply gradient to text */
+    -webkit-text-fill-color: transparent; /* Makes text transparent so the gradient shows */
+    background-clip: text; /* Standard property for non-Webkit browsers */
+    text-emphasis-color: transparent; /* Some browsers may support this as well */
+}
+}
+
 
 
 
@@ -260,12 +277,3 @@ body,
 
 
 
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}

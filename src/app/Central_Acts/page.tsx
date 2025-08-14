@@ -332,7 +332,7 @@ const ChapterList = ({ chapters }: { chapters: Act["Chapters"] }) => {
   }, []);
 
   if (!chapters) {
-    return <p>No chapters available for this act.</p>;
+    return <p className="text-gradient-central-acts font-bold font-mono ">No chapters available for this act at this time, we are working on this issue. Please see other central acts or ask anything specific in mind from our legal chat agent <strong className="text-gradient">"LegalTai"</strong> by clicking <strong className="text-gradient">"+"</strong> icon.</p>;
   }
 
   return (
